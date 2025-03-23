@@ -19,7 +19,16 @@ func _process(delta):
 
 	if velocity.length() > 0:
 		velocity = velocity.normalized() * speed
+		if velocity.x > 0:
+			$AnimatedSprite2D.set_animation("going_right")
+		elif velocity.x < 0:
+			$AnimatedSprite2D.set_animation("going_left")
+		elif velocity.y < 0:
+			$AnimatedSprite2D.set_animation("going_up")
+		else:
+			$AnimatedSprite2D.set_animation("goind_down")
 		$AnimatedSprite2D.play()
+		
 	else:
 		$AnimatedSprite2D.stop()
 		
