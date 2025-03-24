@@ -10,7 +10,7 @@ var cnt = 0
 
 func _ready():
 	screen_size = get_viewport_rect().size
-	
+	5
 func _process(delta):
 	
 	
