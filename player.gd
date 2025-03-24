@@ -2,8 +2,10 @@ extends Area2D
 
 @export var speed = 30 # How fast the player will move (pixels/sec).
 var screen_size # Size of the game window.
+
 @onready var tile_map = $"../TileMapLayer" # our map
 var move_delay = 50
+
 var cnt = 0
 
 func _ready():
