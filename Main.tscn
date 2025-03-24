@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://cjr68obb1m5pe"]
+[gd_scene load_steps=4 format=3 uid="uid://cjr68obb1m5pe"]
 
 [ext_resource type="Script" uid="uid://cdtk1rtvxbdhp" path="res://main.gd" id="1_uu6xs"]
 [ext_resource type="PackedScene" uid="uid://b65vhdx4awbfg" path="res://player.tscn" id="2_r0du0"]
+[ext_resource type="PackedScene" uid="uid://cvdngeg630761" path="res://tile_map_layer.tscn" id="3_r0du0"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_uu6xs")
 
 [node name="Player" parent="." instance=ExtResource("2_r0du0")]
+z_index = 1
+
+[node name="TileMapLayer" parent="." instance=ExtResource("3_r0du0")]
