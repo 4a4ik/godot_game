@@ -13,6 +13,7 @@ var cnt = 0
 
 func _ready():
 	screen_size = get_viewport_rect().size
+	global_position = tile_map.map_to_local(Vector2i(4,4))
 	
 func _process(delta):
 	
