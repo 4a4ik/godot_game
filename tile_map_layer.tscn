@@ -1,18 +1,23 @@
-[gd_scene load_steps=4 format=4 uid="uid://cvdngeg630761"]
+[gd_scene load_steps=5 format=4 uid="uid://cvdngeg630761"]
 
 [ext_resource type="Texture2D" uid="uid://blyb450twp305" path="res://anim/tiles.png" id="1_0ugm7"]
+[ext_resource type="Script" uid="uid://rjr5ba40ni2o" path="res://tile_map_layer.gd" id="2_vqaso"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vqaso"]
 texture = ExtResource("1_0ugm7")
 texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
+0:0/0/custom_data_0 = true
 1:0/0 = 0
 
 [sub_resource type="TileSet" id="TileSet_uuaxm"]
 tile_shape = 3
 tile_size = Vector2i(32, 32)
+custom_data_layer_0/name = "walkable"
+custom_data_layer_0/type = 1
 sources/1 = SubResource("TileSetAtlasSource_vqaso")
 
 [node name="TileMapLayer" type="TileMapLayer"]
 tile_map_data = PackedByteArray("AAAAAAAAAQAAAAAAAAAAAAEAAQAAAAAAAAABAAEAAQAAAAAAAAABAAAAAQAAAAAAAAABAAIAAQAAAAAAAAABAAMAAQAAAAAAAAACAAMAAQAAAAAAAAACAAQAAQABAAAAAAADAAQAAQABAAAAAAADAAMAAQAAAAAAAAADAAIAAQAAAAAAAAADAAEAAQAAAAAAAAADAAAAAQAAAAAAAAACAAAAAQAAAAAAAAACAAEAAQAAAAAAAAAEAAQAAQABAAAAAAAFAAQAAQABAAAAAAAEAAIAAQAAAAAAAAAFAAIAAQAAAAAAAAAEAAMAAQAAAAAAAAAFAAMAAQABAAAAAAABAAQAAQABAAAAAAAGAAIAAQABAAAAAAACAAIAAQABAAAAAAA=")
 tile_set = SubResource("TileSet_uuaxm")
+script = ExtResource("2_vqaso")

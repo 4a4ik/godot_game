@@ -42,7 +42,6 @@ func _process(delta):
 		current_tile_id.x + velocity.x,
 		current_tile_id.y + velocity.y,
 	)
-
 	if velocity.length() > 0:
 		#prints(current_tile_id, target_tile)
 		
@@ -59,12 +58,13 @@ func _process(delta):
 		
 	else:
 		$AnimatedSprite2D.stop()
-		
+	
+	var tile_data: TileData = tile_map.get_cell_tile_data(target_tile)
 	if cnt < move_delay:
 		cnt = cnt + 1
-	else:
+	elif tile_data.get_custom_data("walkable") == true:
 		#position += velocity # * delta
 		global_position = tile_map.map_to_local(target_tile)
-		print(global_position)
+		print(tile_map.get_cell_atlas_coords(current_tile_id))
 		cnt = 0
 	#position = position.clamp(Vector2.ZERO, screen_size)
