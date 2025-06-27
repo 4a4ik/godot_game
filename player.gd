@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var speed = 30 # How fast the player will move (pixels/sec).
+@export var speed = 1 # How fast the player will move (pixels/sec).
 var screen_size # Size of the game window.
 
 @onready var nav_agent = $NavigationAgent2D as NavigationAgent2D
@@ -18,6 +18,7 @@ var cnt = 0
 func _ready():
 	screen_size = get_viewport_rect().size
 	nav_agent.debug_enabled = true # shows red line for navigation algorithm
+	global_position = tile_map.map_to_local(Vector2i(4,4))
 	
 var target_tile = Vector2i(0,0)
 var velocity = Vector2.ZERO # The player's movement vector.
@@ -33,7 +34,7 @@ func _process(delta):
 	
 	nav_agent.target_position = clicked_tile_gl_pos
 	#print(nav_agent.target_position)
-	
+	velocity = Vector2.ZERO # The player's movement vector.
 	if Input.is_action_pressed("move_right"):
 		velocity.x += 1
 	if Input.is_action_pressed("move_left"):
@@ -42,13 +43,16 @@ func _process(delta):
 		velocity.y += 1
 	if Input.is_action_pressed("move_up"):
 		velocity.y -= 1
+
+	# print(velocity)
 		
-	#print(velocity)
 		
+	var current_tile_id = tile_map.local_to_map(global_position)
+	
 	if velocity.length() > 0:
-		#prints(current_tile_id, target_tile)
+		# prints(current_tile_id, target_tile)
 		
-		velocity = velocity.normalized() * speed
+		#velocity = velocity.normalized() * speed
 		if velocity.x > 0:
 			$AnimatedSprite2D.set_animation("going_right")
 		elif velocity.x < 0:
@@ -58,7 +62,7 @@ func _process(delta):
 		else:
 			$AnimatedSprite2D.set_animation("goind_down")
 		$AnimatedSprite2D.play()
-		
+
 	else:
 		$AnimatedSprite2D.stop()
 		
@@ -69,20 +73,32 @@ func _physics_process(delta):
 		
 	var current_tile_id = tile_map.local_to_map(global_position)
 	
+	print("\ncurrent_tile_id")
+	print(current_tile_id)
+
+	print("\velocity")
+	print(velocity)
+
 	target_tile = Vector2i(
 		current_tile_id.x + velocity.x,
 		current_tile_id.y + velocity.y,
 	)
-
+	print("\ntarget_tile")
+	print(target_tile)
+	
+	var tile_data: TileData = tile_map.get_cell_tile_data(target_tile)
+	print("\ntile_data:")
+	print(tile_data)
 	if cnt < move_delay:
 		cnt = cnt + 1
-	else:
+	elif tile_data.get_custom_data("walkable") == true:
 		#position += velocity # * delta
 		global_position = tile_map.map_to_local(target_tile)
 		#print(global_position)
 		
-		global_position = next_move_pos
+		#global_position = next_move_pos
+		print(tile_map.get_cell_atlas_coords(current_tile_id))
 		cnt = 0
 	#position = position.clamp(Vector2.ZERO, screen_size)
-	print("current position", global_position)
-	print(next_move_pos)
+	# print("current position", global_position)
+	# print(next_move_pos)
