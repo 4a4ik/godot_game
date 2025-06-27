@@ -15,7 +15,7 @@ func _ready():
 	screen_size = get_viewport_rect().size
 	global_position = tile_map.map_to_local(Vector2i(4,4))
 	
-func _process(delta):
+func _process(_delta):
 	
 	#Mouse movement
 	if Input.is_action_just_pressed("left_click"):
@@ -39,8 +39,15 @@ func _process(delta):
 		
 	var current_tile_id = tile_map.local_to_map(global_position)
 	
+	# Если y чётный, то направо x не менять, если y нечётный, то налево x не менять
+	var xChange
+	if ((current_tile_id.y % 2 == 0 and velocity.x <= 0 or current_tile_id.y % 2 != 0 and velocity.x >= 0) or velocity.y == 0):
+		xChange = current_tile_id.x + velocity.x
+	else:
+		xChange = current_tile_id.x
+	
 	var target_tile = Vector2i(
-		current_tile_id.x + velocity.x,
+		xChange,
 		current_tile_id.y + velocity.y,
 	)
 	if velocity.length() > 0:
@@ -66,6 +73,6 @@ func _process(delta):
 	elif tile_data.get_custom_data("walkable") == true:
 		#position += velocity # * delta
 		global_position = tile_map.map_to_local(target_tile)
-		print(tile_map.get_cell_atlas_coords(current_tile_id))
+		print(current_tile_id)
 		cnt = 0
 	#position = position.clamp(Vector2.ZERO, screen_size)
