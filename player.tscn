@@ -257,3 +257,5 @@ script = ExtResource("4_1jxqw")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_nvl01")
 animation = &"goind_down"
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
