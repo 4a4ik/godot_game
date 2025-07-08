@@ -8,6 +8,7 @@ var delta = 50
 @onready var nav_agent = $NavigationAgent2D as NavigationAgent2D
 
 
+
 @onready var tile_map = $"../TileMapLayer" # our map
 var move_delay = 20
 
@@ -19,19 +20,18 @@ var move_with_keyboard_after_press = false
 
 var cnt = 0
 
-var mouse_mov_angle_up = 3 * PI / 2
-var mouse_mov_angle_up_right = PI / 2
-var mouse_mov_angle_up_left = 3 * PI / 2
-var mouse_mov_angle_down_right = PI / 4
-var mouse_mov_angle_down = PI / 2	# down point
-var mouse_mov_angle_down_left = 3 * PI / 2
-
+var current_path_index = 0
+var path_centers: Array = [] # Массив центров тайлов на пути
 
 func _ready():
+	# Подключаемся к сигналу о завершении вычисления пути
+	nav_agent.path_changed.connect(on_path_changed)
+	
+	
 	screen_size = get_viewport_rect().size
 	nav_agent.debug_enabled = true # shows red line for navigation algorithm
 	global_position = tile_map.map_to_local(Vector2i(4,4))
-	
+
 var target_tile = Vector2i(0,0)
 var velocity = Vector2.ZERO # The player's movement vector.
 
@@ -42,13 +42,13 @@ func _process(delta):
 		click_position = get_global_mouse_position()
 		clicked_tile_id = tile_map.local_to_map(click_position)
 		clicked_tile_gl_pos = tile_map.map_to_local(clicked_tile_id)
-		if (move_with_keyboard_after_press == false):
-			move_with_mouse_after_press = true
+		move_with_keyboard_after_press = false
+		move_with_mouse_after_press = true
 			#print(clicked_tile_id)
 	
 	nav_agent.target_position = clicked_tile_gl_pos
-	print("\n nav_agent.target_position:")
-	print(nav_agent.target_position)
+	#print("\n nav_agent.target_position:")
+	#print(nav_agent.target_position)
 	
 	velocity = Vector2.ZERO # The player's movement vector.
 	if Input.is_action_pressed("move_right"):
@@ -60,7 +60,7 @@ func _process(delta):
 	if Input.is_action_pressed("move_up"):
 		velocity.y -= 1
 		
-	if (velocity.length() == 0):	# no button is pressed
+	if (velocity.length() != 0):	# no button is pressed
 		move_with_keyboard_after_press = true
 		move_with_mouse_after_press = false
 		
@@ -88,16 +88,32 @@ func _process(delta):
 	else:
 		$AnimatedSprite2D.stop()
 		
+var debug_counter = 0		
+var debug_delay = 200
+
 func _physics_process(delta):
+	
+	debug_counter += 1
+	
 	var next_move_pos = nav_agent.get_next_path_position()
 	var move_dir = global_position.direction_to(next_move_pos)
 	var move_angle = move_dir.angle()
 	
-	print("/n move_angle")
-	print(move_angle)
 	
-	if (move_angle >= 0 and move_angle < 2 * PI / 3):
+	var next_clicked_move_tile_id = tile_map.local_to_map(next_move_pos)
+	
+	if debug_counter % debug_delay == 0:
+		print("\n next_move_pos")
+		print(next_move_pos)
+		
+		print("\n next_clicked_move_tile_id")
+		print(next_clicked_move_tile_id)
+	
+		print("\n move_angle")
 		print(move_angle)
+		
+		#global_position = tile_map.map_to_local(next_clicked_move_tile_id)
+	
 	
 	
 	var current_tile_id = tile_map.local_to_map(global_position)
@@ -134,12 +150,43 @@ func _physics_process(delta):
 		#print(current_tile_id)
 		#elif (next_move_pos != Vector2(0,0)): # check that we are moving with mouse
 			#global_position = tile_map.map_to_local(next_move_pos)
-		#elif (move_with_mouse_after_press):
-			#print("test")
+		elif (move_with_mouse_after_press) and !path_centers.is_empty():
+			global_position = tile_map.map_to_local(path_centers[current_path_index])
+			current_path_index += 1
+			if current_path_index >= path_centers.size():
+				path_centers.clear() # Путь пройден, очищаем
+				current_path_index = 0
 		
 		cnt = 0
 	#position = position.clamp(Vector2.ZERO, screen_size)
 	# print("current position", global_position)
 	# print(next_move_pos)
 	
-	print("\n end of process")
+	if debug_counter % debug_delay == 0:
+		print("\n current_path_index:")
+		print(current_path_index)
+		print("\n path_centers.size():")
+		print(path_centers.size())
+		print("\n end of process")
+
+func on_path_changed():
+	print("on_path_changed()")
+	# Эта функция будет вызвана, когда NavigationAgent2D найдет путь
+	var path = nav_agent.get_current_navigation_path()
+	
+	# Очищаем старый путь и формируем новый из центров тайлов
+	path_centers.clear()
+	current_path_index = 0
+
+	for p in path:
+		var tile_coords = tile_map.local_to_map(p)
+		
+		# Добавляем тайла, только если его еще нет в пути
+		if path_centers.is_empty() or path_centers.back() != tile_coords:
+			path_centers.append(tile_coords)
+
+	# Если игрок уже находится на первом тайле пути, пропускаем его
+	if not path_centers.is_empty():
+		var player_tile_coords = tile_map.local_to_map(global_position)
+		if player_tile_coords == path_centers[0]:
+			current_path_index = 1 # Начинаем со второй точки, если уже на первой
