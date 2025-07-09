@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=4 uid="uid://cjr68obb1m5pe"]
+[gd_scene load_steps=11 format=4 uid="uid://cjr68obb1m5pe"]
 
 [ext_resource type="Script" uid="uid://cdtk1rtvxbdhp" path="res://main.gd" id="1_uu6xs"]
 [ext_resource type="PackedScene" uid="uid://b65vhdx4awbfg" path="res://player.tscn" id="2_r0du0"]
@@ -6,6 +6,15 @@
 [ext_resource type="PackedScene" uid="uid://dxccneu60jjfk" path="res://enemy.tscn" id="4_fos0i"]
 [ext_resource type="Script" uid="uid://b2lmhi46p6wyu" path="res://enemy.gd" id="5_3dxm6"]
 [ext_resource type="Texture2D" uid="uid://bctqanry7yxw8" path="res://anim/click.png" id="6_3dxm6"]
+[ext_resource type="Texture2D" uid="uid://hmjif7mupfxr" path="res://anim/board.png" id="7_lgr22"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trn2v"]
+texture = ExtResource("7_lgr22")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_lgr22"]
+viewport_path = NodePath("Battle/SubViewport")
+
+[sub_resource type="BoxMesh" id="BoxMesh_trn2v"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_uu6xs")
@@ -28,3 +37,28 @@ script = ExtResource("5_3dxm6")
 [node name="click" type="Sprite2D" parent="Battle"]
 position = Vector2(248, 355)
 texture = ExtResource("6_3dxm6")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Battle"]
+
+[node name="Panel" type="Panel" parent="Battle/CanvasLayer"]
+offset_top = 600.0
+offset_right = 480.0
+offset_bottom = 720.0
+theme_override_styles/panel = SubResource("StyleBoxTexture_trn2v")
+
+[node name="TextureRect" type="TextureRect" parent="Battle/CanvasLayer/Panel"]
+layout_mode = 0
+offset_right = 480.0
+offset_bottom = 120.0
+texture = SubResource("ViewportTexture_lgr22")
+
+[node name="SubViewport" type="SubViewport" parent="Battle"]
+transparent_bg = true
+size = Vector2i(240, 120)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Battle/SubViewport"]
+transform = Transform3D(0.846002, 0.319009, 0.427217, -0.0257158, 0.824743, -0.564923, -0.532559, 0.46694, 0.705937, 0.96697, 0, 0)
+mesh = SubResource("BoxMesh_trn2v")
+
+[node name="Camera3D" type="Camera3D" parent="Battle/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2)

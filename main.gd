@@ -1,13 +1,17 @@
 extends Node
 
-@onready var Battle = $Battle/click
+@onready var Click = $Battle/click
+@onready var CanvasLayerrr = $Battle/CanvasLayer
 
 func _ready():
-	Battle.visible = false
+	Click.visible = false
+	CanvasLayerrr.visible = false
 
 func _process(delta):
 	if Input.is_action_just_pressed("whitespace"):
-		if Battle.visible:
-			Battle.visible = false
+		if Click.visible:
+			Click.visible = false
+			CanvasLayerrr.visible = false
 		else: 
-			Battle.visible = true
+			Click.visible = true
+			CanvasLayerrr.visible = true
