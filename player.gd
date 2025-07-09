@@ -42,11 +42,21 @@ func _process(delta):
 		click_position = get_global_mouse_position()
 		clicked_tile_id = tile_map.local_to_map(click_position)
 		clicked_tile_gl_pos = tile_map.map_to_local(clicked_tile_id)
+		#print("nav_agent.distance_to_target() before")
+		#print(nav_agent.distance_to_target())
+		#
+		#print("nav_agent.get_current_navigation_path()")
+		#print(nav_agent.get_current_navigation_path())
+		
+		nav_agent.target_position = clicked_tile_gl_pos
+		nav_agent.get_next_path_position() # compute path
+		
+		#print("nav_agent.distance_to_target() before")
+		#print(nav_agent.distance_to_target())
 		move_with_keyboard_after_press = false
 		move_with_mouse_after_press = true
 			#print(clicked_tile_id)
 	
-	nav_agent.target_position = clicked_tile_gl_pos
 	#print("\n nav_agent.target_position:")
 	#print(nav_agent.target_position)
 	
@@ -95,22 +105,22 @@ func _physics_process(delta):
 	
 	debug_counter += 1
 	
-	var next_move_pos = nav_agent.get_next_path_position()
-	var move_dir = global_position.direction_to(next_move_pos)
-	var move_angle = move_dir.angle()
+	#var next_move_pos = nav_agent.get_next_path_position()
+	#var move_dir = global_position.direction_to(next_move_pos)
+	#var move_angle = move_dir.angle()
+	#
+	#
+	#var next_clicked_move_tile_id = tile_map.local_to_map(next_move_pos)
 	
-	
-	var next_clicked_move_tile_id = tile_map.local_to_map(next_move_pos)
-	
-	if debug_counter % debug_delay == 0:
-		print("\n next_move_pos")
-		print(next_move_pos)
-		
-		print("\n next_clicked_move_tile_id")
-		print(next_clicked_move_tile_id)
-	
-		print("\n move_angle")
-		print(move_angle)
+	#if debug_counter % debug_delay == 0:
+		#print("\n next_move_pos")
+		#print(next_move_pos)
+		#
+		#print("\n next_clicked_move_tile_id")
+		#print(next_clicked_move_tile_id)
+	#
+		#print("\n move_angle")
+		#print(move_angle)
 		
 		#global_position = tile_map.map_to_local(next_clicked_move_tile_id)
 	
@@ -162,17 +172,18 @@ func _physics_process(delta):
 	# print("current position", global_position)
 	# print(next_move_pos)
 	
-	if debug_counter % debug_delay == 0:
-		print("\n current_path_index:")
-		print(current_path_index)
-		print("\n path_centers.size():")
-		print(path_centers.size())
-		print("\n end of process")
+	#if debug_counter % debug_delay == 0:
+		#print("\n current_path_index:")
+		#print(current_path_index)
+		#print("\n path_centers.size():")
+		#print(path_centers.size())
+		#print("\n end of process")
 
 func on_path_changed():
 	print("on_path_changed()")
 	# Эта функция будет вызвана, когда NavigationAgent2D найдет путь
 	var path = nav_agent.get_current_navigation_path()
+	var inbetween_tile = Vector2i()
 	
 	# Очищаем старый путь и формируем новый из центров тайлов
 	path_centers.clear()
@@ -182,8 +193,31 @@ func on_path_changed():
 		var tile_coords = tile_map.local_to_map(p)
 		
 		# Добавляем тайла, только если его еще нет в пути
-		if path_centers.is_empty() or path_centers.back() != tile_coords:
+		if path_centers.is_empty():
 			path_centers.append(tile_coords)
+		elif path_centers.back()  != tile_coords:
+			# fix jump over tiles
+			#for i in range(5):
+			if (tile_coords - path_centers.back()).length() > 2:
+				print("problem between tiles")
+				print(tile_coords)
+				print(path_centers.back())
+				inbetween_tile = tile_coords
+				if abs(tile_coords.x - path_centers.back().x) > 1:
+					# get tile coordinates in between
+					inbetween_tile.x = (tile_coords.x + path_centers.back().x) / 2
+				if abs(tile_coords.y - path_centers.back().y) > 1:
+					# get tile coordinates in between
+					inbetween_tile.y = (tile_coords.y + path_centers.back().y) / 2
+				path_centers.append(inbetween_tile)
+				print("result")
+				print(inbetween_tile)
+			
+			path_centers.append(tile_coords)
+			
+	print("new path")
+	for i in path_centers:
+		print(i)
 
 	# Если игрок уже находится на первом тайле пути, пропускаем его
 	if not path_centers.is_empty():
