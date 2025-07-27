@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=4 uid="uid://cjr68obb1m5pe"]
+[gd_scene load_steps=7 format=4 uid="uid://cjr68obb1m5pe"]
 
 [ext_resource type="Script" uid="uid://cdtk1rtvxbdhp" path="res://main.gd" id="1_uu6xs"]
 [ext_resource type="PackedScene" uid="uid://b65vhdx4awbfg" path="res://player.tscn" id="2_r0du0"]
 [ext_resource type="PackedScene" uid="uid://cvdngeg630761" path="res://tile_map_layer.tscn" id="3_r0du0"]
 [ext_resource type="PackedScene" uid="uid://dxccneu60jjfk" path="res://enemy.tscn" id="4_fos0i"]
 [ext_resource type="Script" uid="uid://b2lmhi46p6wyu" path="res://enemy.gd" id="5_3dxm6"]
+[ext_resource type="Script" uid="uid://bbb1yq18i1cut" path="res://path_visualizer.gd" id="6_3dxm6"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_uu6xs")
@@ -19,3 +20,19 @@ tile_map_data = PackedByteArray("AAD//wAAAQAAAAEAAAD//wEAAQAAAAEAAAD//wIAAQAAAAE
 [node name="enemy" parent="." instance=ExtResource("4_fos0i")]
 position = Vector2(367, 447)
 script = ExtResource("5_3dxm6")
+
+[node name="Line2D" type="Line2D" parent="."]
+width = 5.0
+default_color = Color(0, 0, 1, 1)
+
+[node name="finish_line2d" type="Line2D" parent="."]
+width = 5.0
+default_color = Color(0.672391, 0.000340188, 0.672387, 1)
+
+[node name="final_line_points" type="Line2D" parent="."]
+width = 4.0
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="PathVisualizer" type="Node2D" parent="."]
+script = ExtResource("6_3dxm6")
