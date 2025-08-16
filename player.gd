@@ -27,7 +27,7 @@ var current_path_index = 0
 var path_centers: Array = [] # Массив центров тайлов на пути
 var path_centers_global: Array = [] # Массив центров тайлов на пути
 
-signal path_ready(new_path_array: Array) # Renamed for clarity: path_ready or path_calculated
+#signal path_ready(new_path_array: Array) # Renamed for clarity: path_ready or path_calculated
 
 func _ready():
 	
@@ -41,7 +41,7 @@ var velocity = Vector2.ZERO # The player's movement vector.
 
 # Declare the custom signal
 # The argument type (Array[Vector2i]) is optional but good for clarity and type-checking
-signal path_updated(new_path_array: Array[Vector2i])
+#signal path_updated(new_path_array: Array[Vector2i])
 
 func _process(delta):
 	
@@ -53,18 +53,13 @@ func _process(delta):
 		
 		# Запрашиваем путь у PathfindingManager, который находится в Main.
 		var start_tile_coords = main_node.tile_map_layer.local_to_map(global_position)
-		path = main_node.pathfinding_manager.get_hex_path(start_tile_coords, clicked_tile_id)
+		path = main_node.pathfinding_manager.get_coordinates_path(start_tile_coords, clicked_tile_id)
 
 		
 		if not path.is_empty():
-			print("Найден новый путь!")		
-			path.pop_front()
+			print("Найден новый путь!")
 			print(path)
-			global_path = transform_hex_to_global(path)
-			print(global_path)
-			main_node.path_visualizer.update_path_display(global_path)
-			# Теперь вы можете использовать этот 'path' для пошагового движения игрока
-			# (например, в _physics_process)
+			main_node.path_visualizer.update_path_display(path)
 		
 		move_with_keyboard_after_press = false
 		move_with_mouse_after_press = true
@@ -128,23 +123,16 @@ func _physics_process(delta):
 		if (move_with_keyboard_after_press):
 			if tile_data.get_custom_data("walkable") == true:
 				global_position = tile_map.map_to_local(target_tile)
-		elif (move_with_mouse_after_press) and not global_path.is_empty():
+		elif (move_with_mouse_after_press) and not path.is_empty():
 			# Перемещаем игрока в центр следующего тайла
-			global_position = global_path[0]
+			global_position = path[0]
 				
 			# Удаляем первый элемент из массива
 			path.pop_front()
-			global_path.pop_front()
-			if global_path.is_empty():
+			if path.is_empty():
 				move_with_mouse_after_press = false
 		
 		cnt = 0
 		
 
-func transform_hex_to_global(ids):
-	var new_coords: Array = []
-	for id in ids:
-		new_coords.push_back(tile_map.map_to_local(id))
-		
-	return new_coords
 		
