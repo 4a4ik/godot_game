@@ -74,11 +74,11 @@ func _physics_process(delta):
 		
 	var current_tile_id = tile_map.local_to_map(global_position)
 	
-	print("\ncurrent_tile_id")
-	print(current_tile_id)
+	#print("\ncurrent_tile_id")
+	#print(current_tile_id)
 
-	print("\velocity")
-	print(velocity)
+	#print("\velocity")
+	#print(velocity)
 
 		# Если y чётный, то направо x не менять, если y нечётный, то налево x не менять
 	var xChange
@@ -91,18 +91,18 @@ func _physics_process(delta):
 		xChange,
 		current_tile_id.y + velocity.y,
 	)
-	print("\ntarget_tile")
-	print(target_tile)
+	#print("\ntarget_tile")
+	#print(target_tile)
 	
 	var tile_data: TileData = tile_map.get_cell_tile_data(target_tile)
-	print("\ntile_data:")
-	print(tile_data)
+	#print("\ntile_data:")
+	#print(tile_data)
 	if cnt < move_delay:
 		cnt = cnt + 1
 	elif tile_data.get_custom_data("walkable") == true:
 		#position += velocity # * delta
 		global_position = tile_map.map_to_local(target_tile)
-		print(current_tile_id)
+		#print(current_tile_id)
 		cnt = 0
 	#position = position.clamp(Vector2.ZERO, screen_size)
 	# print("current position", global_position)

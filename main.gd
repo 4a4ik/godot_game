@@ -4,8 +4,8 @@ extends Node
 @onready var CanvasLayerrr = $Battle/CanvasLayer
 
 func _ready():
-	Click.visible = false
-	CanvasLayerrr.visible = false
+	Click.visible = true
+	CanvasLayerrr.visible = true
 
 func _process(delta):
 	if Input.is_action_just_pressed("whitespace"):
