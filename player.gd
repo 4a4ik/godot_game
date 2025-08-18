@@ -1,15 +1,9 @@
 extends Area2D
 
-@export var speed = 1 # How fast the player will move (pixels/sec).
-var screen_size # Size of the game window.
-
 var delta = 50
 
 @onready var main_node = get_parent() # Получаем ссылку на родительский узел (Main)
 
-
-
-@onready var tile_map = $"../TileMapLayer" # our map
 var move_delay = 20
 
 var click_position = Vector2()
@@ -30,18 +24,12 @@ var path_centers_global: Array = [] # Массив центров тайлов �
 #signal path_ready(new_path_array: Array) # Renamed for clarity: path_ready or path_calculated
 
 func _ready():
-	
-	screen_size = get_viewport_rect().size
-	#nav_agent.debug_enabled = true # shows red line for navigation algorithm
-	global_position = tile_map.map_to_local(Vector2i(4,4))
-	
+	global_position = Vector2i(144, 112)
+
 
 var target_tile = Vector2i(0,0)
 var velocity = Vector2.ZERO # The player's movement vector.
 
-# Declare the custom signal
-# The argument type (Array[Vector2i]) is optional but good for clarity and type-checking
-#signal path_updated(new_path_array: Array[Vector2i])
 
 func _process(delta):
 	
@@ -49,7 +37,7 @@ func _process(delta):
 	if Input.is_action_just_pressed("left_click"):
 		click_position = get_global_mouse_position()
 		clicked_tile_id = main_node.tile_map_layer.local_to_map(click_position)
-		clicked_tile_gl_pos = tile_map.map_to_local(clicked_tile_id)
+		clicked_tile_gl_pos = main_node.tile_map_layer.map_to_local(clicked_tile_id)
 		
 		# Запрашиваем путь у PathfindingManager, который находится в Main.
 		var start_tile_coords = main_node.tile_map_layer.local_to_map(global_position)
@@ -78,7 +66,7 @@ func _process(delta):
 		move_with_keyboard_after_press = true
 		move_with_mouse_after_press = false
 
-	var current_tile_id = tile_map.local_to_map(global_position)
+	var current_tile_id = main_node.tile_map_layer.local_to_map(global_position)
 	
 
 	if velocity.length() > 0:
@@ -102,7 +90,7 @@ func _physics_process(delta):
 	
 	debug_counter += 1
 	
-	var current_tile_id = tile_map.local_to_map(global_position)
+	var current_tile_id = main_node.tile_map_layer.local_to_map(global_position)
 
 		# Если y чётный, то направо x не менять, если y нечётный, то налево x не менять
 	var xChange
@@ -116,13 +104,13 @@ func _physics_process(delta):
 		current_tile_id.y + velocity.y,
 	)
 	
-	var tile_data: TileData = tile_map.get_cell_tile_data(target_tile)
+	var tile_data: TileData = main_node.tile_map_layer.get_cell_tile_data(target_tile)
 	if cnt < move_delay:
 		cnt = cnt + 1
 	else:
 		if (move_with_keyboard_after_press):
 			if tile_data.get_custom_data("walkable") == true:
-				global_position = tile_map.map_to_local(target_tile)
+				global_position = main_node.tile_map_layer.map_to_local(target_tile)
 		elif (move_with_mouse_after_press) and not path.is_empty():
 			# Перемещаем игрока в центр следующего тайла
 			global_position = path[0]
