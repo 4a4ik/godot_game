@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=4 uid="uid://cjr68obb1m5pe"]
+[gd_scene load_steps=21 format=4 uid="uid://cjr68obb1m5pe"]
 
 [ext_resource type="Script" uid="uid://cdtk1rtvxbdhp" path="res://main.gd" id="1_uu6xs"]
 [ext_resource type="PackedScene" uid="uid://b65vhdx4awbfg" path="res://player.tscn" id="2_r0du0"]
@@ -15,9 +15,35 @@ texture = ExtResource("7_lgr22")
 [sub_resource type="ViewportTexture" id="ViewportTexture_lgr22"]
 viewport_path = NodePath("Battle/SubViewport")
 
-[sub_resource type="BoxMesh" id="BoxMesh_trn2v"]
+[sub_resource type="FogMaterial" id="FogMaterial_trn2v"]
+albedo = Color(0.26666668, 0.13333334, 0.12156863, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_03owx"]
+next_pass = SubResource("FogMaterial_trn2v")
+albedo_color = Color(0.36862746, 0.27058825, 0.6156863, 1)
+metallic = 1.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_wkp8b"]
+material = SubResource("StandardMaterial3D_03owx")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_03owx"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_trn2v"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_trn2v"]
+size = Vector3(16, 1, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wkp8b"]
+size = Vector3(1, 6, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_20pc6"]
+size = Vector3(1, 6, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5vvyt"]
+size = Vector3(18, 6, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c6i3y"]
+size = Vector3(18, 6, 1)
 
 [node name="Main" type="Node"]
 script = ExtResource("1_uu6xs")
@@ -64,10 +90,12 @@ transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 2, 
 
 [node name="RigidBody3D" type="RigidBody3D" parent="Battle/SubViewport"]
 gravity_scale = 2.0
+sleeping = true
+freeze = true
 script = ExtResource("8_trn2v")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Battle/SubViewport/RigidBody3D"]
-mesh = SubResource("BoxMesh_trn2v")
+mesh = SubResource("BoxMesh_wkp8b")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Battle/SubViewport/RigidBody3D"]
@@ -79,7 +107,6 @@ visible = false
 gravity_scale = 2.0
 sleeping = true
 freeze = true
-script = ExtResource("8_trn2v")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Battle/SubViewport/RigidBody3D2"]
 transform = Transform3D(16, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0, 0)
@@ -87,8 +114,7 @@ mesh = SubResource("BoxMesh_trn2v")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Battle/SubViewport/RigidBody3D2"]
-transform = Transform3D(16, 0, 0, 0, 1, 0, 0, 0, 8, 0, 0, 0)
-shape = SubResource("BoxShape3D_03owx")
+shape = SubResource("BoxShape3D_trn2v")
 
 [node name="MeshInstance3D2" type="MeshInstance3D" parent="Battle/SubViewport/RigidBody3D2"]
 transform = Transform3D(1, 0, 0, 0, 6, 0, 0, 0, 8, 8.5, 2.5, 0)
@@ -96,8 +122,8 @@ mesh = SubResource("BoxMesh_trn2v")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="Battle/SubViewport/RigidBody3D2"]
-transform = Transform3D(1, 0, 0, 0, 6, 0, 0, 0, 8, 8.5, 2.5, 0)
-shape = SubResource("BoxShape3D_03owx")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.5, 2.5, 0)
+shape = SubResource("BoxShape3D_wkp8b")
 
 [node name="MeshInstance3D3" type="MeshInstance3D" parent="Battle/SubViewport/RigidBody3D2"]
 transform = Transform3D(1, 0, 0, 0, 6, 0, 0, 0, 8, -8.5, 2.5, 0)
@@ -105,8 +131,8 @@ mesh = SubResource("BoxMesh_trn2v")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="Battle/SubViewport/RigidBody3D2"]
-transform = Transform3D(1, 0, 0, 0, 6, 0, 0, 0, 8, -8.5, 2.5, 0)
-shape = SubResource("BoxShape3D_03owx")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.5, 2.5, 0)
+shape = SubResource("BoxShape3D_20pc6")
 
 [node name="MeshInstance3D4" type="MeshInstance3D" parent="Battle/SubViewport/RigidBody3D2"]
 transform = Transform3D(18, 0, 0, 0, 6, 0, 0, 0, 1, 0, 2.5, 4.5)
@@ -114,8 +140,8 @@ mesh = SubResource("BoxMesh_trn2v")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D4" type="CollisionShape3D" parent="Battle/SubViewport/RigidBody3D2"]
-transform = Transform3D(18, 0, 0, 0, 6, 0, 0, 0, 1, 0, 2.5, 4.5)
-shape = SubResource("BoxShape3D_03owx")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 4.5)
+shape = SubResource("BoxShape3D_5vvyt")
 
 [node name="MeshInstance3D5" type="MeshInstance3D" parent="Battle/SubViewport/RigidBody3D2"]
 transform = Transform3D(18, 0, 0, 0, 6, 0, 0, 0, 1, 0, 2.5, -4.5)
@@ -123,5 +149,8 @@ mesh = SubResource("BoxMesh_trn2v")
 skeleton = NodePath("../..")
 
 [node name="CollisionShape3D5" type="CollisionShape3D" parent="Battle/SubViewport/RigidBody3D2"]
-transform = Transform3D(18, 0, 0, 0, 6, 0, 0, 0, 1, 0, 2.5, -4.5)
-shape = SubResource("BoxShape3D_03owx")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -4.5)
+shape = SubResource("BoxShape3D_c6i3y")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="Battle/SubViewport"]
+transform = Transform3D(-0.0073348414, -0.99957734, -0.028132485, 0.25218233, -0.02907303, 0.96724284, -0.967652, 2.0663116e-08, 0.25228903, 9.378904, 6.134599, 0)
