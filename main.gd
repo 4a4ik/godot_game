@@ -2,8 +2,8 @@
 extends Node
 
 # Получаем ссылки на дочерние узлы с помощью NodePath
-@onready var tile_map_layer = $TileMapLayer
-@onready var player = $Player
+@onready var tile_map_layer = $Map/TileMapLayer
+@onready var player = $Map/Player
 @onready var pathfinding_manager = $PathfindingManager
 @onready var path_visualizer = $PathVisualizer
 @onready var Click = $Battle/click

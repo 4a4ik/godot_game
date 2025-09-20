@@ -2,7 +2,7 @@ extends Area2D
 
 var delta = 50
 
-@onready var main_node = get_parent() # Получаем ссылку на родительский узел (Main)
+@onready var main_node = get_parent().get_parent()  # Получаем ссылку на родительский узел (Main)
 
 var move_delay = 20
 
@@ -83,14 +83,9 @@ func _process(delta):
 	else:
 		$AnimatedSprite2D.stop()
 		
-var debug_counter = 0		
-var debug_delay = 200
 
 func _physics_process(delta):
-	var next_move_pos = nav_agent.get_next_path_position()
-	var move_dir = global_position.direction_to(next_move_pos)
 	
-	debug_counter += 1
 	
 	var current_tile_id = main_node.tile_map_layer.local_to_map(global_position)
 

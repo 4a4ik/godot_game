@@ -5,14 +5,14 @@
 [ext_resource type="PackedScene" uid="uid://cvdngeg630761" path="res://tile_map_layer.tscn" id="3_r0du0"]
 [ext_resource type="PackedScene" uid="uid://dxccneu60jjfk" path="res://enemy.tscn" id="4_fos0i"]
 [ext_resource type="Script" uid="uid://b2lmhi46p6wyu" path="res://enemy.gd" id="5_3dxm6"]
-[ext_resource type="Script" path="res://path_visualizer.gd" id="6_3dxm6"]
-[ext_resource type="Script" path="res://pathfinding_manager.gd" id="7_lgr22"]
-[ext_resource type="Texture2D" uid="uid://bctqanry7yxw8" path="res://anim/click.png" id="6_3dxm6"]
-[ext_resource type="Texture2D" uid="uid://hmjif7mupfxr" path="res://anim/board.png" id="7_lgr22"]
-[ext_resource type="Script" uid="uid://doo3pvxmjq3nb" path="res://rigid_body_3d.gd" id="8_trn2v"]
+[ext_resource type="Script" uid="uid://bbb1yq18i1cut" path="res://path_visualizer.gd" id="6_3dxm6"]
+[ext_resource type="Script" uid="uid://1hs103w8sciv" path="res://pathfinding_manager.gd" id="7_lgr22"]
+[ext_resource type="Script" path="res://rigid_body_3d.gd" id="8_trn2v"]
+[ext_resource type="Texture2D" uid="uid://bctqanry7yxw8" path="res://anim/click.png" id="8_wkp8b"]
+[ext_resource type="Texture2D" uid="uid://hmjif7mupfxr" path="res://anim/board.png" id="9_20pc6"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_trn2v"]
-texture = ExtResource("7_lgr22")
+texture = ExtResource("9_20pc6")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_lgr22"]
 viewport_path = NodePath("Battle/SubViewport")
@@ -55,11 +55,12 @@ script = ExtResource("6_3dxm6")
 
 [node name="PathfindingManager" type="Node" parent="."]
 script = ExtResource("7_lgr22")
+
 [node name="Battle" type="Node" parent="."]
 
 [node name="click" type="Sprite2D" parent="Battle"]
 position = Vector2(248, 355)
-texture = ExtResource("6_3dxm6")
+texture = ExtResource("8_wkp8b")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="Battle"]
 
