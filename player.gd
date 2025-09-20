@@ -87,6 +87,8 @@ var debug_counter = 0
 var debug_delay = 200
 
 func _physics_process(delta):
+	var next_move_pos = nav_agent.get_next_path_position()
+	var move_dir = global_position.direction_to(next_move_pos)
 	
 	debug_counter += 1
 	
