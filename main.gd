@@ -8,6 +8,16 @@ extends Node
 @onready var path_visualizer = $PathVisualizer
 @onready var Click = $Battle/click
 @onready var CanvasLayerrr = $Battle/CanvasLayer
+@onready var enemy_portrait = $Battle/CanvasLayer/Panel/EnemyPortrait
+
+# Dictionary to store entities on the map. Key: Vector2i, Value: Node
+var grid_entities: Dictionary = {}
+
+# Called by entities when they spawn to register their position
+func register_entity(tile_coords: Vector2i, entity: Node2D):
+	grid_entities[tile_coords] = entity
+	print("Entity ", entity.name, " registered at ", tile_coords)
+
 
 func _ready():
 	Click.visible = true

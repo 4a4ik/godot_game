@@ -85,8 +85,6 @@ func _process(delta):
 		
 
 func _physics_process(delta):
-	
-	
 	var current_tile_id = main_node.tile_map_layer.local_to_map(global_position)
 
 		# Если y чётный, то направо x не менять, если y нечётный, то налево x не менять
@@ -107,10 +105,34 @@ func _physics_process(delta):
 	else:
 		if (move_with_keyboard_after_press):
 			if tile_data.get_custom_data("walkable") == true:
+				
+				# 1. Check if the target tile has an entity registered
+				if main_node.grid_entities.has(target_tile):
+					var entity = main_node.grid_entities[target_tile]
+					if entity.is_in_group("enemies"):
+						_start_combat(entity)
+						move_with_keyboard_after_press = false
+						cnt = 0
+						return # Stop movement execution
+						
 				global_position = main_node.tile_map_layer.map_to_local(target_tile)
 		elif (move_with_mouse_after_press) and not path.is_empty():
-			# Перемещаем игрока в центр следующего тайла
-			global_position = path[0]
+			# get net tiles to move in
+			var next_global_pos = path[0] 
+			var next_tile_coords = main_node.tile_map_layer.local_to_map(next_global_pos)
+			# 2. Check if the next path tile has an entity registered
+			if main_node.grid_entities.has(next_tile_coords):
+				var entity = main_node.grid_entities[next_tile_coords]
+				if entity.is_in_group("enemies"):
+					_start_combat(entity)
+					path.clear() # Clear the remaining path
+					main_node.path_visualizer.update_path_display(path)
+					move_with_mouse_after_press = false
+					cnt = 0
+					return # Stop movement execution
+			
+			# Move player to the center of the next tile
+			global_position = next_global_pos
 				
 			# Удаляем первый элемент из массива
 			path.pop_front()
@@ -121,5 +143,16 @@ func _physics_process(delta):
 		
 		cnt = 0
 		
-
+# New function to handle combat initialization
+func _start_combat(enemy_node: Node2D):
+	velocity = Vector2.ZERO 
+	
+	main_node.CanvasLayerrr.visible = true
+	main_node.Click.visible = true
+	
+	# Pass the portrait from the enemy to the UI node in Main
+	if enemy_node.combat_portrait != null:
+		main_node.enemy_portrait.texture = enemy_node.combat_portrait
+	else:
+		print("Error: combat_portrait is null on this enemy!")
 		

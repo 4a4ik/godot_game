@@ -32,4 +32,3 @@ func _roll():
 	apply_central_impulse(throw_vector * roll_strength)
 	while (sleeping == false):
 		await get_tree().create_timer(0.1).timeout
-	print("aaa")
