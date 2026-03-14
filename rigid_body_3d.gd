@@ -1,5 +1,7 @@
 extends RigidBody3D
 
+@onready var raycasts = $Raycasts.get_children() 
+
 var start_pos
 var roll_strength = 10
 
@@ -30,6 +32,18 @@ func _roll():
 	var throw_vector = Vector3(randf_range(-1, 1), 0, randf_range(-1, 1)).normalized()
 	angular_velocity = throw_vector * roll_strength / 2
 	apply_central_impulse(throw_vector * roll_strength)
-	while (sleeping == false):
-		await get_tree().create_timer(0.1).timeout
-	print("aaa")
+	#while (sleeping == false):
+	#	await get_tree().create_timer(0.1).timeout
+
+func _on_sleeping_state_changed():
+	print("Stan się zmienił! Aktualnie is_sleeping: ", is_sleeping())
+	var selected_value = null
+	if sleeping:
+		for raycast in raycasts:
+			if raycast.is_colliding():
+				if selected_value == null:
+					selected_value = raycast.opposite_side
+				else:
+					_roll()
+					return
+		roll_finished.emit(selected_value)

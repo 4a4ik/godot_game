@@ -28,3 +28,8 @@ func _process(delta):
 		else: 
 			Click.visible = true
 			CanvasLayerrr.visible = true
+
+
+func _on_rigid_body_3d_roll_finished(value: Variant) -> void:
+	print("value")
+	print(value)
