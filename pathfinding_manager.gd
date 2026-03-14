@@ -10,11 +10,11 @@ var tile_map_layer: TileMapLayer
 func initialize(tilemap_node: TileMapLayer):
 	self.tile_map_layer = tilemap_node
 	_populate_astar_service()
-	print("PathfindingManager готов к работе.")
+	#print("PathfindingManager готов к работе.")
 
 func _populate_astar_service():
 	var map_rect = tile_map_layer.get_used_rect()
-	print("entered _populate_astar_service")
+	#print("entered _populate_astar_service")
 
 	# Шаг 1: Добавляем все проходимые точки в AStar2D
 	for x in range(map_rect.position.x, map_rect.end.x):
@@ -73,25 +73,25 @@ func get_hex_neighbors(tile_coords: Vector2i) -> Array[Vector2i]:
 	return valid_neighbors
 
 func get_coordinates_path(start_tile: Vector2i, end_tile: Vector2i):
-	print("entered get_hex_path")
+	#print("entered get_hex_path")
 	var start_id = hash(start_tile)
 	var end_id = hash(end_tile)
 	
-	print("start_id")
-	print(start_id)
-	print("end_id")
-	print(end_id)
+	#print("start_id")
+	#print(start_id)
+	#print("end_id")
+	#print(end_id)
 	
 	if not astar_service.has_point(start_id) or not astar_service.has_point(end_id):
-		print("Ошибка: Начальный или конечный тайл непроходим.")
+		#print("Ошибка: Начальный или конечный тайл непроходим.")
 		return []
 
 	# Get the path as an array of IDs (which are Vector2is in your case)
 	var path_ids: Array = astar_service.get_id_path(start_id, end_id)
 	# remove first element, bebcause we are standing on it
 	path_ids.pop_front()
-	print("path_ids")
-	print(path_ids)
+	#print("path_ids")
+	#print(path_ids)
 	
 	# Create a new array with the correct type
 	# Это нужно, чтобы избежать ошибки "Trying to return an array of type Array where expected return type is Array[Vector2i]".

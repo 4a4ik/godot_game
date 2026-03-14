@@ -45,8 +45,8 @@ func _process(delta):
 
 		
 		if not path.is_empty():
-			print("Найден новый путь!")
-			print(path)
+			#print("Найден новый путь!")
+			#print(path)
 			main_node.path_visualizer.update_path_display(path)
 		
 		move_with_keyboard_after_press = false
@@ -116,6 +116,8 @@ func _physics_process(delta):
 			path.pop_front()
 			if path.is_empty():
 				move_with_mouse_after_press = false
+			else:
+				main_node.path_visualizer.update_path_display(path)
 		
 		cnt = 0
 		
