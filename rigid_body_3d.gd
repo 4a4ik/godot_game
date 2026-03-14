@@ -36,6 +36,7 @@ func _roll():
 	#	await get_tree().create_timer(0.1).timeout
 
 func _on_sleeping_state_changed():
+	# не выводит когда меняется на false
 	print("Stan się zmienił! Aktualnie is_sleeping: ", is_sleeping())
 	var selected_value = null
 	if sleeping:
