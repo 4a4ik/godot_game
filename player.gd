@@ -6,6 +6,11 @@ var delta = 50
 
 var move_delay = 20
 
+# Exported variables for player stats
+@export var combat_portrait: Texture2D
+@export var max_health: int = 20
+var current_health: int
+
 var click_position = Vector2()
 var clicked_tile_id = Vector2i()
 var clicked_tile_gl_pos = Vector2()
@@ -24,7 +29,11 @@ var path_centers_global: Array = [] # Массив центров тайлов �
 #signal path_ready(new_path_array: Array) # Renamed for clarity: path_ready or path_calculated
 
 func _ready():
+	current_health = max_health # Set initial health
 	global_position = Vector2i(144, 112)
+	# Update UI immediately at the start of the game
+	# We use call_deferred to make sure main_node is fully ready
+	call_deferred("_update_health_ui")
 
 
 var target_tile = Vector2i(0,0)
@@ -145,14 +154,26 @@ func _physics_process(delta):
 		
 # New function to handle combat initialization
 func _start_combat(enemy_node: Node2D):
-	velocity = Vector2.ZERO 
+	velocity = Vector2.ZERO # Reset player velocity
 	
+	# Show combat UI
 	main_node.CanvasLayerrr.visible = true
 	main_node.Click.visible = true
 	
-	# Pass the portrait from the enemy to the UI node in Main
+	# Pass the enemy's portrait to the UI
 	if enemy_node.combat_portrait != null:
 		main_node.enemy_portrait.texture = enemy_node.combat_portrait
-	else:
-		print("Error: combat_portrait is null on this enemy!")
 		
+	# Pass the player's portrait to the UI
+	if combat_portrait != null:
+		main_node.player_portrait.texture = combat_portrait
+		
+	# Call our new UI update function
+	_update_health_ui()
+
+# Separate function for health UI updates to keep code clean
+func _update_health_ui():
+	if main_node and main_node.player_health_label:
+		main_node.player_health_label.text = str(current_health) + " / " + str(max_health)
+		main_node.player_health_bar.max_value = max_health
+		main_node.player_health_bar.value = current_health

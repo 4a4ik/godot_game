@@ -9,6 +9,11 @@ extends Node
 @onready var Click = $Battle/click
 @onready var CanvasLayerrr = $Battle/CanvasLayer
 @onready var enemy_portrait = $Battle/CanvasLayer/Panel/EnemyPortrait
+@onready var player_portrait = $Battle/CanvasLayer/Panel/PlayerPortrait
+
+# New paths for the health UI in the HUD layer
+@onready var player_health_label = $HUD/HealthLabel
+@onready var player_health_bar = $HUD/HealthBar
 
 # Dictionary to store entities on the map. Key: Vector2i, Value: Node
 var grid_entities: Dictionary = {}
