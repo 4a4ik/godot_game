@@ -7,14 +7,33 @@ var roll_strength = 10
 
 signal roll_finished(value)
 
+@onready var object_scene = $Battle/SubViewport
+
+func spawn(position: Vector3):
+	print("HELOU")
+	var instance = object_scene.instantiate()
+	add_child(instance)
+	instance.global_position = position
+
 func _ready():
 	print("labubu")
 	start_pos = global_position
 
 func _process(delta):
+	if Input.is_action_just_pressed("e"):
+		print("PRRRIVET")
+		spawn(Vector3(0, 5, 0))
 	if Input.is_action_just_pressed("right_click"):
 		_roll()
+		
+var _was_sleeping = false
 
+func _physics_process(_delta):
+	if sleeping != _was_sleeping:
+		_was_sleeping = sleeping
+		if !_was_sleeping:
+			_on_sleeping_state_changed()
+		
 func _roll():
 	# Reset state
 	sleeping = false
@@ -37,7 +56,7 @@ func _roll():
 
 func _on_sleeping_state_changed():
 	# не выводит когда меняется на false
-	print("Stan się zmienił! Aktualnie is_sleeping: ", is_sleeping())
+	print("Stan się zmienił! Aktualnie is_sleeping: ", sleeping)
 	var selected_value = null
 	if sleeping:
 		for raycast in raycasts:
